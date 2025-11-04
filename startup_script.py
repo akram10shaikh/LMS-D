@@ -13,8 +13,8 @@ def run():
         print("⚙️ Running migrations...")
         call_command('migrate')
 
-        print("📦 Collecting static files...")
-        call_command('collectstatic', '--noinput')
+        # print("📦 Collecting static files...")
+        # call_command('collectstatic', '--noinput')
 
         print("🔐 Creating or resetting superuser...")
         User = get_user_model()
