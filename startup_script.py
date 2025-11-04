@@ -2,7 +2,7 @@ import os
 import django
 
 # Set up Django environment
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ams.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lms.settings')
 django.setup()
 
 from django.core.management import call_command
