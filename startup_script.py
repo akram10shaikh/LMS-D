@@ -19,9 +19,9 @@ def run():
         print("🔐 Creating or resetting superuser...")
         User = get_user_model()
         user, created = User.objects.get_or_create(
-            username='admin@gmail.com',  # <-- match username here
+            email='admin1@gmail.com',  # <-- match username here
             defaults={
-                'email': 'admin@gmail.com',
+                'email': 'admin1@gmail.com',
                 'is_superuser': True,
                 'is_staff': True
             }
