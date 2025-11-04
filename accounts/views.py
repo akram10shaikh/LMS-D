@@ -14,6 +14,7 @@ from .permissions import IsStaff
 from .models import StaffProfile,NameVerification,TwoFactorAuth
 from .serializers import GoogleAuthSerializer, StaffProfileSerializer, ChangePasswordSerializer,TwoFactorAuthSerializer
 from django.contrib.auth import login as django_login
+from django.shortcuts import render
 
 from .serializers import (
     RegisterSerializer,
@@ -31,6 +32,9 @@ from django.utils import timezone
 import random
 
 User = get_user_model()
+
+def home(request):
+    return render(request,'home.html')
 
 # Register + Send Email
 class RegisterView(generics.CreateAPIView):

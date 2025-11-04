@@ -21,14 +21,14 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls')),  # All authentication-related routes from the accounts app
+    path('', include('accounts.urls')),  # All authentication-related routes from the accounts app
     path('courses/', include('course.urls')),
     path('batches/', include('batch.urls')),
     path('content/', include('content.urls')),
     path('progress/', include('progress.urls')),
     path('api/quiz/', include('quiz.urls')),
     path('api/assignment/', include('assignment.urls')),
-   path('notifications/', include('notifications.urls')),
+    path('notifications/', include('notifications.urls')),
     path('chats/',include('chats.urls')),
     path('announcements/',include('announcements.urls')),
     path('myprofile/',include('myprofile.urls')),

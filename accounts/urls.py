@@ -10,11 +10,12 @@ from .views import (
     PasswordResetConfirmView,
     ResendEmailVerificationView, ChangePasswordView, StaffListCreateAPIView, StaffDetailAPIView,
     AccountSettingsView,NameVerificationView,ApproveNameVerificationView,
-    TwoFactorSettingsView,SendOTPView,VerifyOTPView
+    TwoFactorSettingsView,SendOTPView,VerifyOTPView, home,
 )
 
 urlpatterns = [
     #auth APIs
+    path('',home,name='home'),
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
     path('verify-email/<uidb64>/<token>/', VerifyEmailView.as_view(), name='verify-email'),
