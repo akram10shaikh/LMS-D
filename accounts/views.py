@@ -47,7 +47,7 @@ class RegisterView(generics.CreateAPIView):
         user = serializer.save()
 
         return Response(
-            {"detail": "Registration successful. Please check your email to verify your account."},
+            {"detail": f"Registration successful. Please check your email to verify your account."},
             status=status.HTTP_201_CREATED
         )
 
@@ -71,19 +71,25 @@ class LoginView(APIView):
 class VerifyEmailView(APIView):
     permission_classes = [AllowAny]
 
-    def get(self, request, uidb64, token):
-        try:
-            uid = force_str(urlsafe_base64_decode(uidb64))
-            user = User.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-            user = None
+    def post(self, request):
+        otp = request.data.get('otp')
 
-        if user and token_generator.check_token(user, token):
-            user.is_active = True
-            user.save()
-            return Response({"message": "Email verified successfully. You can now login."})
-        else:
-            return Response({"message": "Invalid or expired link."}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            user = User.objects.get(otp=otp)
+        except User.DoesNotExist:
+            return Response({"message": "Invalid OTP."}, status=status.HTTP_400_BAD_REQUEST)
+
+        expiry_time = user.otp_created_at + timezone.timedelta(minutes=10)
+        if timezone.now() > expiry_time:
+            return Response({"message": "OTP expired."}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.is_active = True
+        user.otp = None
+        user.otp_created_at = None
+        user.save()
+
+        return Response({"message": "Email verified successfully. You can now login."})
+
 
 
 # Protected Profile (JWT Required)
@@ -297,7 +303,7 @@ class SendOTPView(APIView):
         send_mail(
             'Your 2FA Code',
             f'Your OTP code is {otp}',
-            settings.DEFAULT_FROM_MAIL,
+            settings.DEFAULT_FROM_EMAIL,
             [request.user.email],
             fail_silently=False,
         )

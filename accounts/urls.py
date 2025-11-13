@@ -18,7 +18,7 @@ urlpatterns = [
     path('',home,name='home'),
     path('register/', RegisterView.as_view(), name='register'),
     path('login/', LoginView.as_view(), name='login'),
-    path('verify-email/<uidb64>/<token>/', VerifyEmailView.as_view(), name='verify-email'),
+    path('verify-email/', VerifyEmailView.as_view(), name='verify-email'),
     path('resend-verify-email/', ResendEmailVerificationView.as_view(), name='resend-verify-email'),
     path('profile/', UserProfileView.as_view(), name='profile'),
 

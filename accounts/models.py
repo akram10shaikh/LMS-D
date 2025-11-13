@@ -58,6 +58,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     profile_image = models.ImageField(upload_to="profile_images/", null=True, blank=True)
 
+    otp = models.CharField(max_length=6, null=True, blank=True)
+    otp_created_at = models.DateTimeField(null=True, blank=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ["full_name", "role"]
 

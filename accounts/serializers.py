@@ -9,7 +9,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 import requests
 from django.core.exceptions import ValidationError as DjangoValidationError
-
+import random
+from django.utils import timezone
 
 from accounts.models import StaffProfile,NameVerification,TwoFactorAuth
 
@@ -43,6 +44,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop("confirm_password")
 
+        otp = random.randint(100000, 999999)
         user = User.objects.create_user(
             full_name=validated_data["full_name"],
             email=validated_data["email"],
@@ -50,21 +52,26 @@ class RegisterSerializer(serializers.ModelSerializer):
             date_of_birth=validated_data["date_of_birth"],
             password=validated_data["password"],
             role=validated_data.get("role", "student"),
-            is_active=False
+            is_active=False,
+            otp=otp,
+            otp_created_at=timezone.now(),
         )
 
         # Send email verification
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = token_generator.make_token(user)
-        verify_url = f"http://127.0.0.1:8000/accounts/verify-email/{uid}/{token}/"
 
-        send_mail(
-            "Verify Your Email",
-            f"Click the link to verify your email:\n\n{verify_url}",
+        try:
+            send_mail(
+            "Your OTP for Email Verification",
+            f"Your OTP is: {otp}",
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
             fail_silently=False,
-        )
+            )
+        except Exception as e:
+            # Log the error properly
+            print("Email sending failed:", e)
 
         return user
 
